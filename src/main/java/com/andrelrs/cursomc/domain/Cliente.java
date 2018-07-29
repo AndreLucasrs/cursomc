@@ -1,6 +1,7 @@
 package com.andrelrs.cursomc.domain;
 
 import com.andrelrs.cursomc.domain.enums.TipoCliente;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,7 +13,7 @@ public class Cliente implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String nome;
@@ -20,11 +21,12 @@ public class Cliente implements Serializable {
     private String cpfOuCnpj;
     private Integer tipo;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "cliente")
     private List<Endereco> enderecos = new ArrayList<>();
 
     @ElementCollection
-    @CollectionTable(name="TELEFONES")
+    @CollectionTable(name = "TELEFONES")
     private Set<String> telefones = new HashSet<>();
 
     public Cliente() {
