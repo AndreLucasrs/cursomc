@@ -8,8 +8,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.andrelrs.cursomc.domain.Categoria;
+import com.andrelrs.cursomc.domain.Cidade;
+import com.andrelrs.cursomc.domain.Estado;
 import com.andrelrs.cursomc.domain.Produto;
 import com.andrelrs.cursomc.repositories.CategoriaRepository;
+import com.andrelrs.cursomc.repositories.CidadeRepository;
+import com.andrelrs.cursomc.repositories.EstadoRepository;
 import com.andrelrs.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -21,6 +25,12 @@ public class CursomcApplication implements CommandLineRunner {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 	
+	@Autowired
+	private CidadeRepository cidadeRepository;
+	
+	@Autowired
+	private EstadoRepository estadoRepository;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
 	}
@@ -29,9 +39,20 @@ public class CursomcApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		Categoria categoria1 = new Categoria(null,"Informática");
 		Categoria categoria2 = new Categoria(null,"Escritório");
+		
 		Produto produto1 = new Produto(null,"Computador",2000.00);
 		Produto produto2 = new Produto(null,"Impressora",800.00);
 		Produto produto3 = new Produto(null,"Mouse",80.00);
+		
+		Estado est1 = new Estado(null,"Minas Gerais");
+		Estado est2 = new Estado(null,"São Paulo");
+		
+		Cidade c1 = new Cidade(null, "Uberlandia", est1);
+		Cidade c2 = new Cidade(null, "São Paulo", est2);
+		Cidade c3 = new Cidade(null, "Campinas", est2);
+		
+		est1.getCidades().add(c1);
+		est2.getCidades().addAll(Arrays.asList(c2,c3));
 		
 		categoria1.getProdutos().addAll(Arrays.asList(produto1,produto2,produto3));
 		categoria2.getProdutos().addAll(Arrays.asList(produto2));
@@ -40,7 +61,10 @@ public class CursomcApplication implements CommandLineRunner {
 		produto2.getCategorias().addAll(Arrays.asList(categoria1,categoria2));
 		produto3.getCategorias().addAll(Arrays.asList(categoria1));
 		
+		
 		categoriaRepository.saveAll(Arrays.asList(categoria1,categoria2));
 		produtoRepository.saveAll(Arrays.asList(produto1,produto2,produto3));
+		estadoRepository.saveAll(Arrays.asList(est1,est2));
+		cidadeRepository.saveAll(Arrays.asList(c1,c2,c3));
 	}
 }
