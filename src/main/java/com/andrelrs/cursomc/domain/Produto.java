@@ -1,6 +1,5 @@
 package com.andrelrs.cursomc.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -22,7 +21,7 @@ public class Produto implements Serializable {
     private Double preco;
 
     //Do outro lado da associação ja foram buscado o objeto, então eu não busco mais
-    @JsonBackReference
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "PRODUTO_CATEGORIA",
             joinColumns = @JoinColumn(name = "produto_id"),
@@ -84,10 +83,10 @@ public class Produto implements Serializable {
     }
 
     @JsonIgnore
-    public List<Pedido> getPedidos(){
+    public List<Pedido> getPedidos() {
 
         List<Pedido> lista = new ArrayList<>();
-        for(ItemPedido x : itens){
+        for (ItemPedido x : itens) {
             lista.add(x.getPedido());
         }
         return lista;
