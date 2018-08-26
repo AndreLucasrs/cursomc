@@ -17,7 +17,7 @@ public class CategoriaResource {
     private CategoriaService service;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> find(@PathVariable Integer id) {
+    public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 
         Categoria obj = service.find(id);
 
@@ -26,13 +26,23 @@ public class CategoriaResource {
 
     //@RequestBody serve para converter o json em objeto java
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> inserir(@RequestBody Categoria obj) {
-        obj = service.inserir(obj);
+    public ResponseEntity<Void> insert(@RequestBody Categoria obj) {
+        obj = service.insert(obj);
         //Depois de salvar o Objeto ele sera redirecionado, ele vai ser redirecionado para /{id},
         // o id passada sera o que acabou de ser criado no objeto
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path("/{id}").buildAndExpand(obj.getId()).toUri();
 
         return ResponseEntity.created(uri).build();
+    }
+
+    //PUT para atualizar
+    @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
+    public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id){
+
+        obj.setId(id);
+        obj = service.update(obj);
+
+        return ResponseEntity.noContent().build();
     }
 }
