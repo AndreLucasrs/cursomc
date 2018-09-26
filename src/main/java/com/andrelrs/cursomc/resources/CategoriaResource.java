@@ -1,7 +1,6 @@
 package com.andrelrs.cursomc.resources;
 
 import com.andrelrs.cursomc.domain.Categoria;
-import com.andrelrs.cursomc.dto.CategoriaDTO;
 import com.andrelrs.cursomc.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
