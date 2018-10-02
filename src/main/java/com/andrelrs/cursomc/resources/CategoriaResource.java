@@ -1,8 +1,10 @@
 package com.andrelrs.cursomc.resources;
 
 import com.andrelrs.cursomc.domain.Categoria;
+import com.andrelrs.cursomc.dto.CategoriaDTO;
 import com.andrelrs.cursomc.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -39,8 +41,8 @@ public class CategoriaResource {
     }
 
     //PUT para atualizar
-    @RequestMapping(value = "/{id}",method = RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id){
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id) {
 
         obj.setId(id);
         obj = service.update(obj);
@@ -48,8 +50,8 @@ public class CategoriaResource {
         return ResponseEntity.noContent().build();
     }
 
-    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
-    public ResponseEntity<Void> delete(@PathVariable Integer id){
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
 
         service.delete(id);
 
@@ -61,6 +63,23 @@ public class CategoriaResource {
 
         List<Categoria> list = service.findAll();
         List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(listDto);
+    }
+
+    //@RequestParam quer dizer que os parametros são opcionais
+    //por que colocar 24 linhas por pagina, é pq ele é multiplo de 1,2,3 e 4 então fica facil de organizar o layout de forma responsivel,
+    //pq vc pode mostrar de 1 e 1, 2 e 2 ...
+    @RequestMapping(value = "/page", method = RequestMethod.GET)
+    public ResponseEntity<Page<CategoriaDTO>> findPage(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+            @RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+
+        Page<Categoria> list = service.findPage(page, linesPerPage, orderBy, direction);
+        //Como o page ja é java 8, não precisa do stream e nem do collect
+        Page<CategoriaDTO> listDto = list.map(obj -> new CategoriaDTO(obj));
 
         return ResponseEntity.ok().body(listDto);
     }
