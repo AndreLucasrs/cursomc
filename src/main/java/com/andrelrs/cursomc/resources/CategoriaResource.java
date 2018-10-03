@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,8 +30,11 @@ public class CategoriaResource {
     }
 
     //@RequestBody serve para converter o json em objeto java
+    //Para validar esse obkDTO antes de passar pra frente usar o @Valid
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Void> insert(@RequestBody Categoria obj) {
+    public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) {
+
+        Categoria obj = service.fromDTO(objDto);
         obj = service.insert(obj);
         //Depois de salvar o Objeto ele sera redirecionado, ele vai ser redirecionado para /{id},
         // o id passada sera o que acabou de ser criado no objeto
@@ -42,8 +46,9 @@ public class CategoriaResource {
 
     //PUT para atualizar
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id) {
+    public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id) {
 
+        Categoria obj = service.fromDTO(objDto);
         obj.setId(id);
         obj = service.update(obj);
 

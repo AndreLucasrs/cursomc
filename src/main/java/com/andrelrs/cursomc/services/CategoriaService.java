@@ -1,6 +1,7 @@
 package com.andrelrs.cursomc.services;
 
 import com.andrelrs.cursomc.domain.Categoria;
+import com.andrelrs.cursomc.dto.CategoriaDTO;
 import com.andrelrs.cursomc.repositories.CategoriaRepository;
 import com.andrelrs.cursomc.services.exceptions.DataIntegrityException;
 import com.andrelrs.cursomc.services.exceptions.ObjectNotFoundException;
@@ -61,4 +62,10 @@ public class CategoriaService {
         //o findAll vai considerar o pageRequest como argumento e vai me retornar a pagina
         return repo.findAll(pageRequest);
     }
+
+    //Instancia uma categoria apartir do DTO
+    public Categoria fromDTO(CategoriaDTO objDto) {
+        return new Categoria(objDto.getId(), objDto.getNome());
+    }
+
 }
