@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
+import static java.util.Objects.isNull;
+
 @Entity
 public class Cliente implements Serializable {
 
@@ -40,7 +42,7 @@ public class Cliente implements Serializable {
         this.nome = nome;
         this.email = email;
         this.cpfOuCnpj = cpfOuCnpj;
-        this.tipo = tipo.getCod();
+        this.tipo = (isNull(tipo)) ? null : tipo.getCod();
     }
 
     public Integer getId() {
