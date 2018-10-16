@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static java.util.Objects.isNull;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 //serve para mapeamento de subclasses, o .JOINED ira mapear uma tabela separada para cada subclasse
@@ -29,7 +31,7 @@ public abstract class Pagamento implements Serializable {
 
     public Pagamento(Integer id, EstadoPagamento estado, Pedido pedido) {
         this.id = id;
-        this.estado = estado.getCod();
+        this.estado = (isNull(estado)) ? null : estado.getCod();
         this.pedido = pedido;
     }
 
