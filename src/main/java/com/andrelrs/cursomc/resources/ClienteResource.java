@@ -2,13 +2,16 @@ package com.andrelrs.cursomc.resources;
 
 import com.andrelrs.cursomc.domain.Cliente;
 import com.andrelrs.cursomc.dto.ClienteDTO;
+import com.andrelrs.cursomc.dto.ClienteNewDTO;
 import com.andrelrs.cursomc.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,5 +73,18 @@ public class ClienteResource {
         Page<ClienteDTO> listDto = list.map(obj -> new ClienteDTO(obj));
 
         return ResponseEntity.ok().body(listDto);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto) {
+
+        Cliente obj = service.fromDTO(objDto);
+        obj = service.insert(obj);
+        //Depois de salvar o Objeto ele sera redirecionado, ele vai ser redirecionado para /{id},
+        // o id passada sera o que acabou de ser criado no objeto
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                .path("/{id}").buildAndExpand(obj.getId()).toUri();
+
+        return ResponseEntity.created(uri).build();
     }
 }
