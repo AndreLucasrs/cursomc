@@ -2,6 +2,7 @@ package com.andrelrs.cursomc.domain;
 
 import com.andrelrs.cursomc.domain.enums.EstadoPagamento;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +12,8 @@ import static java.util.Objects.isNull;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+//a classe pagamento tera um campo adicional chamado type
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 //serve para mapeamento de subclasses, o .JOINED ira mapear uma tabela separada para cada subclasse
 public abstract class Pagamento implements Serializable {
 
