@@ -21,6 +21,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
     //font: https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods
     //Se usarmos esse metodo abaixo não irá precisar usar o @Query com aquela consulta e nem os @Param, porque esse metodo ja faz essa consulta
-    // internamente pelo o Spring data, porque o Spring irá gerar a consulta para a gente
+    // internamente pelo o Spring data irá gerar a consulta para a gente
     //Page<Produto> findDistinctByNomeContainingAndCategoriasIn(String nome, List<Categoria> categorias, Pageable pageRequest);
 }
