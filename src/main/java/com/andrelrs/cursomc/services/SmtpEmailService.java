@@ -8,6 +8,18 @@ import org.springframework.mail.SimpleMailMessage;
 
 //Quando for usar essa classe, irá precisar colocar o email e a senha nos arquivo
 //application-dev e application-prod
+//Para conseguimos enviar o email com o gmail, precisa:
+//logar no gmail,
+// ir em https://myaccount.google.com/security
+// ir na parte de segurança
+// ir em Acesso a app menos seguro
+// e ativar
+//com o passar do tempo ele irá desabilitar novamente
+//então faça os passos anterios e adicionesse o proximo passo
+//https://accounts.google.com/b/0/DisplayUnlockCaptcha
+// e basta clicar em continuar
+
+//referencia pdf: 05-servico-de-email
 public class SmtpEmailService extends AbstractEmailService {
 
     @Autowired
