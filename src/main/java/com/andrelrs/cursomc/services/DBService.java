@@ -2,6 +2,7 @@ package com.andrelrs.cursomc.services;
 
 import com.andrelrs.cursomc.domain.*;
 import com.andrelrs.cursomc.domain.enums.EstadoPagamento;
+import com.andrelrs.cursomc.domain.enums.Perfil;
 import com.andrelrs.cursomc.domain.enums.TipoCliente;
 import com.andrelrs.cursomc.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,11 +75,17 @@ public class DBService {
         Cidade c2 = new Cidade(null, "São Paulo", est2);
         Cidade c3 = new Cidade(null, "Campinas", est2);
 
-        Cliente cli1 = new Cliente(null, "Maria Silva", "andrelucasrs.v@gmail.com", "11111111111", TipoCliente.PESSOAFISICA,bCryptPasswordEncoder.encode("123"));
+        Cliente cli1 = new Cliente(null, "Maria Silva", "andrelucasrs.v@gmail.com", "57064790033", TipoCliente.PESSOAFISICA,bCryptPasswordEncoder.encode("123"));
         cli1.getTelefones().addAll(Arrays.asList("12345678", "87654321"));
+
+        Cliente cli2 = new Cliente(null, "Ana Costa", "andrelrs.v@outlool.com", "44130471090", TipoCliente.PESSOAFISICA,bCryptPasswordEncoder.encode("123"));
+        cli2.getTelefones().addAll(Arrays.asList("12045789", "97654021"));
+        cli2.addPerfil(Perfil.ADMIN);
 
         Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 300", "Jardim", "38220834", cli1, c1);
         Endereco e2 = new Endereco(null, "Avenida Matos", "105", "sala 800", "Centro", "38777012", cli1, c2);
+        Endereco e3 = new Endereco(null, "Avenida Floriano", "2106", null, "Centro", "38777656", cli2, c2);
+
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, e1);
@@ -102,6 +109,7 @@ public class DBService {
         produto3.getItens().addAll(Arrays.asList(ip2));
 
         cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+        cli2.getEnderecos().addAll(Arrays.asList(e3));
         cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
 
         est1.getCidades().add(c1);
@@ -132,8 +140,8 @@ public class DBService {
         produtoRepository.saveAll(Arrays.asList(produto1, produto2, produto3, produto4, produto5, produto6, produto7, produto8, produto9, produto10, produto11));
         estadoRepository.saveAll(Arrays.asList(est1, est2));
         cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
-        clienteRepository.saveAll(Arrays.asList(cli1));
-        enderecoRepository.saveAll(Arrays.asList(e1, e2));
+        clienteRepository.saveAll(Arrays.asList(cli1,cli2));
+        enderecoRepository.saveAll(Arrays.asList(e1, e2 , e3));
         pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
         pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
         itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
