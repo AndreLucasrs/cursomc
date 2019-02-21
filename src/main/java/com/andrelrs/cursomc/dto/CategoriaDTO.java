@@ -12,7 +12,7 @@ public class CategoriaDTO implements Serializable {
 
     private Integer id;
 
-    //Isso vai garantir que o dado que vir da tela, tem que vir preenchido e com o tamanho entre esses 2 valores
+    // Isso vai garantir que o dado que vir da tela, tem que vir preenchido e com o tamanho entre esses 2 valores
     @NotEmpty(message = "Preenchimento obrigatório")
     @Length(min = 5, max = 80, message = "O tamanho dever ser entre 5 e 80 caracteres")
     private String nome;
