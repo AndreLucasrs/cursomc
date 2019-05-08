@@ -3,11 +3,14 @@ package com.andrelrs.cursomc.services;
 import com.andrelrs.cursomc.domain.Cidade;
 import com.andrelrs.cursomc.domain.Cliente;
 import com.andrelrs.cursomc.domain.Endereco;
+import com.andrelrs.cursomc.domain.enums.Perfil;
 import com.andrelrs.cursomc.domain.enums.TipoCliente;
 import com.andrelrs.cursomc.dto.ClienteDTO;
 import com.andrelrs.cursomc.dto.ClienteNewDTO;
 import com.andrelrs.cursomc.repositories.ClienteRepository;
 import com.andrelrs.cursomc.repositories.EnderecoRepository;
+import com.andrelrs.cursomc.security.UserSS;
+import com.andrelrs.cursomc.services.exceptions.AuthorizationException;
 import com.andrelrs.cursomc.services.exceptions.DataIntegrityException;
 import com.andrelrs.cursomc.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 @Service
 public class ClienteService {
 
@@ -35,6 +41,13 @@ public class ClienteService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Cliente find(Integer id) {
+
+        UserSS user = UserService.authenticated();
+
+        if(isNull(user) || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())){
+
+            throw new AuthorizationException("Acesso Negado");
+        }
 
         Optional<Cliente> obj = repo.findById(id);
         //ele irá retorna o objeto ou a excessão
