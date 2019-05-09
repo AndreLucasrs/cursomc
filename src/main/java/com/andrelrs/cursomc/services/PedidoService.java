@@ -1,5 +1,6 @@
 package com.andrelrs.cursomc.services;
 
+import com.andrelrs.cursomc.domain.Cliente;
 import com.andrelrs.cursomc.domain.ItemPedido;
 import com.andrelrs.cursomc.domain.PagamentoComBoleto;
 import com.andrelrs.cursomc.domain.Pedido;
@@ -7,12 +8,16 @@ import com.andrelrs.cursomc.domain.enums.EstadoPagamento;
 import com.andrelrs.cursomc.repositories.ItemPedidoRepository;
 import com.andrelrs.cursomc.repositories.PagamentoRepository;
 import com.andrelrs.cursomc.repositories.PedidoRepository;
+import com.andrelrs.cursomc.security.UserSS;
+import com.andrelrs.cursomc.services.exceptions.AuthorizationException;
 import com.andrelrs.cursomc.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.Date;
 import java.util.Optional;
 
@@ -55,15 +60,15 @@ public class PedidoService {
         obj.setCliente(clienteService.find(obj.getCliente().getId()));
         obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
         obj.getPagamento().setPedido(obj);
-        if(obj.getPagamento() instanceof PagamentoComBoleto){
+        if (obj.getPagamento() instanceof PagamentoComBoleto) {
             PagamentoComBoleto pagto = (PagamentoComBoleto) obj.getPagamento();
-            boletoService.preencherPagamentoComBoleto(pagto,obj.getInstante());
+            boletoService.preencherPagamentoComBoleto(pagto, obj.getInstante());
         }
 
         obj = repo.save(obj);
         pagamentoRepository.save(obj.getPagamento());
 
-        for (ItemPedido itemPedido: obj.getItens()) {
+        for (ItemPedido itemPedido : obj.getItens()) {
             itemPedido.setDesconto(0.0);
             itemPedido.setProduto(produtoService.find(itemPedido.getProduto().getId()));
             itemPedido.setPreco(itemPedido.getProduto().getPreco());
@@ -75,5 +80,15 @@ public class PedidoService {
         emailService.sendOrderConfirmationHtmlEmail(obj);
 
         return obj;
+    }
+
+    public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        UserSS user = UserService.authenticated();
+        if (user == null) {
+            throw new AuthorizationException("Acesso negado");
+        }
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        Cliente cliente = clienteService.find(user.getId());
+        return repo.findByCliente(cliente, pageRequest);
     }
 }
