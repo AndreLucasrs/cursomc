@@ -30,7 +30,7 @@ public class Cliente implements Serializable {
     @JsonIgnore
     private String senha;
 
-    @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Endereco> enderecos = new ArrayList<>();
 
     @ElementCollection
@@ -44,8 +44,6 @@ public class Cliente implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> pedidos = new ArrayList<>();
-
-    private String imageUrl;
 
     public Cliente() {
         addPerfil(Perfil.CLIENTE);
@@ -133,19 +131,11 @@ public class Cliente implements Serializable {
         this.senha = senha;
     }
 
-    public Set<Perfil> getPerfis(){
+    public Set<Perfil> getPerfis() {
         return perfis.stream().map(perfil -> Perfil.toEnum(perfil)).collect(Collectors.toSet());
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public void addPerfil(Perfil perfil){
+    public void addPerfil(Perfil perfil) {
         perfis.add(perfil.getCod());
     }
 
