@@ -102,6 +102,24 @@ public class ClienteService {
         return repo.findAll();
     }
 
+    public Cliente findByEmail(String email) {
+
+        UserSS user = UserService.authenticated();
+
+        if (isNull(user) || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+
+            throw new AuthorizationException("Acesso Negado");
+        }
+
+        Cliente cliente = repo.findByEmail(email);
+
+        if (isNull(cliente)) {
+            throw new ObjectNotFoundException("Objeto não encontrado! Id: " + user.getId() + ", Tipo: " + Cliente.class.getName());
+        }
+
+        return cliente;
+    }
+
     //Page é uma forma de encapsula informaçãoes e operações
 
     public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
