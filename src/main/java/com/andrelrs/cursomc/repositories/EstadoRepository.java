@@ -1,12 +1,15 @@
 package com.andrelrs.cursomc.repositories;
 
+import com.andrelrs.cursomc.domain.Estado;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.andrelrs.cursomc.domain.Categoria;
-import com.andrelrs.cursomc.domain.Cidade;
-import com.andrelrs.cursomc.domain.Estado;
+import java.util.List;
 
 @Repository
 public interface EstadoRepository extends JpaRepository<Estado, Integer> {
+
+    @Transactional(readOnly = true)
+    public List<Estado> findAllByOrderByNome();
 }
